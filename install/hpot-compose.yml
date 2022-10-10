@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  hpot:
+    image: linuxserver/endlessh:latest
+    container_name: hpot
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${TIMEZONE}
+      - MSDELAY=10000
+      - MAXLINES=32
+      - MAXCLIENTS=4096
+      - LOGFILE=true
+    volumes:
+      - ./logs:/config/logs/endlessh
+    ports:
+      - 22:2222

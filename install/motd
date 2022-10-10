@@ -1,0 +1,35 @@
+clear
+
+# Vars definitions ==================================================================
+upSeconds="$(/usr/bin/cut -d. -f1 /proc/uptime)"
+mins=$((${upSeconds}/60%60))
+hours=$((${upSeconds}/3600%24))
+days=$((${upSeconds}/86400))
+UPTIME=`printf "%d days, %02dh, %02dm" "$days" "$hours" "$mins"`
+MEMORY=$(free -h --si | awk 'NR==2 { printf "%sB / %sB Free: %sB",$3,$2,$4; }')
+DISK=$(df -h ~ | awk 'NR==2 { printf "%sB / %sB Free: %sB",$3,$2,$4; }')
+TEMP=$(vcgencmd measure_temp | grep -o "[0-3].*")
+
+# Output text =======================================================================
+clear
+echo "
+$(tput setaf 138)
+'||''|.   ||                     
+ ||   ||  ..                   
+ ||...|'  ||  
+ ||       ||  
+.||.     .||. 
+$(tput setaf 69)
+'||''|.           ||                     .           
+ ||   || ... ..   ..  .... ...  ....   .||.    ....  
+ ||...|'  ||' ''  ||   '|.  |  '' .||   ||   .|...||        $(tput setaf 2) `date +"%A, %e %B %Y, %r"`$(tput setaf 69)
+ ||       ||      ||    '|.|   .|' ||   ||   ||             $(tput setaf 2) `uname -srmo`$(tput setaf 69)
+.||.     .||.    .||.    '|    '|..'|'  '|.'  '|...' 
+$(tput setaf 35)  
+ .|'''.|                                                    $(tput setaf 245)• Uptime.............: ${UPTIME}$(tput setaf 35) 
+ ||..  '    ....  ... ..  .... ...   ....  ... ..           $(tput setaf 245)• Memory.............: ${MEMORY}$(tput setaf 35) 
+  ''|||.  .|...||  ||' ''  '|.  |  .|...||  ||' ''          $(tput setaf 245)• Disk...............: ${DISK}$(tput setaf 35) 
+.     '|| ||       ||       '|.|   ||       ||              $(tput setaf 245)• Running Processes..: `ps ax | wc -l | tr -d " "`$(tput setaf 35) 
+|'....|'   '|...' .||.       '|     '|...' .||.             $(tput setaf 245)• Temperature........: ${TEMP}$(tput setaf 35)                                 
+
+$(tput sgr0)"

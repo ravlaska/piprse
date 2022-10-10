@@ -1,0 +1,70 @@
+version: "3"
+
+networks:
+  pi_vpn:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.0/24
+
+services:
+
+  pihole:
+    container_name: pihole
+#    image: pihole/pihole:latest
+    build:
+      context: .
+      dockerfile: scripts/pihole.Dockerfile
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "81:80/tcp"
+      - "67:67/udp"
+      - "5335:5335/tcp"
+    environment:
+      TZ: ${TIMEZONE}
+      WEBPASSWORD: ${PIHOLE_PASS}
+      FTLCONF_REPLY_ADDR4: ${LAN_IP}
+      PIHOLE_DNS_: '127.0.0.1#5335'
+      DNSMASQ_LISTENING: 'all'
+    volumes:
+      - './pihole/etc-pihole:/etc/pihole'
+      - './pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
+      - './pihole/dns/resolv.conf:/etc/resolv.conf'
+      - './pihole/lighttpd/external.conf:/etc/lighttpd/external.conf'
+    cap_add:
+      - NET_ADMIN
+    networks:
+      pi_vpn:
+        ipv4_address: 10.0.0.3
+    labels:
+      - com.centurylinklabs.watchtower.enable=false
+
+  wireguard:
+    container_name: wireguard
+    image: linuxserver/wireguard
+    dns:
+      - 10.0.0.3
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+    ports:
+      - "51820:51820/udp"
+    environment:
+      - TZ=${TIMEZONE}
+      - PUID=1000
+      - PGID=1000
+      - INTERNAL_SUBNET=10.1.1.0
+      - PEERS=${CLIENTS_NUMBER}
+      - PEERDNS=10.0.0.3
+      - SERVERURL=${DOMAIN_NAME}
+    volumes:
+      - ./wireguard:/config
+      - /lib/modules:/lib/modules
+    networks:
+      pi_vpn:
+        ipv4_address: 10.0.0.5
