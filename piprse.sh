@@ -624,7 +624,8 @@ config_wireguard_clients() {
   CLIENTS_NUMBER=$(whiptail --inputbox "How many VPN clients you want to have?" 20 60 3>&1 1>&2 2>&3)
   exitstatus=$?
   if [ $exitstatus = 0 ]; then
-      sed -i 's+CLIENTS_NUMBER_SED+'$CLIENTS_NUMBER'+g' /home/$USER/piprse/pihole_vpn/.env
+      # sed -i 's+CLIENTS_NUMBER_SED+'$CLIENTS_NUMBER'+g' /home/$USER/piprse/pihole_vpn/.env
+      sed -i 's/\(CLIENTS_NUMBER=\)\(.*\)/\1'$CLIENTS_NUMBER'/' /home/$USER/piprse/pihole_vpn/.env
       docker-compose --env-file=/home/$USER/piprse/pihole_vpn/.env -f /home/$USER/piprse/pihole_vpn/docker-compose.yml up -d --build wireguard
       docker restart wireguard
   else
