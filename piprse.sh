@@ -638,10 +638,10 @@ config_wireguard_show_info() {
   clients=$(sudo cat /home/$USER/piprse/pihole_vpn/.env | grep -oP '(?<=CLIENTS_NUMBER=).*')
   while [ $i -le $clients ]
   do
-    echo '\nClient '$i':'
-    echo '\nConfiguration:\n'
+    echo 'Client '$i':'
+    echo 'Configuration:'
     cat /home/$USER/piprse/pihole_vpn/wireguard/peer$i/peer$i.conf
-    echo '\n\nQR Code:\n'
+    echo 'QR Code:'
     qrencode -t ansiutf8 < /home/$USER/piprse/pihole_vpn/wireguard/peer$i/peer$i.conf
     i=$(( i + 1 ))
   done
