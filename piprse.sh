@@ -142,7 +142,7 @@ about() {
 # Basic instruction
 instruction() {
   SSHA=$(cat /etc/ssh/sshd_config | grep "Port " | grep -o ' .*')
-  whiptail --title Information --msgbox "\
+  whiptail --title Instruction --msgbox "\
   This tool was created for setup privacy-enhancing server with ease.
 
   It was tested on the Raspberry Pi 4, but should work on most devices with Raspbian system.
