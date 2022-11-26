@@ -145,7 +145,7 @@ instruction() {
   whiptail --title Information --msgbox "\
   This tool was created for setup privacy-enhancing server with ease.
 
-  It was tested on the Raspberry Pi 4, but should work on most devices with Debian-based system.
+  It was tested on the Raspberry Pi 4, but should work on most devices with Raspbian system.
 
   Most important info:
 
