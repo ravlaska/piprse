@@ -7,6 +7,8 @@ Installation:
 
 `cd piprse`
 
+`chmod +x piprse.sh`
+
 `sudo ./piprse.sh`
 
 In the script you have an option to set an alias to run this script anywhere just by typing `piprse`.
