@@ -534,7 +534,7 @@ DOMAIN_NAME=$(whiptail --inputbox " \
 exitstatus=$?
 if [ $exitstatus = 0 ]; then
     sed -i 's+DOMAIN_NAME_SED+'$DOMAIN_NAME'+g' /home/$USER/piprse/pihole_vpn/.env
-    sed -i 's+pihole.domain+pihole.'$DOMAIN_NAME'+g' /home/$USER/piprse/pihole_vpn/scripts/external.conf
+    sed -i 's+DOMAIN_NAME_SED+'$DOMAIN_NAME'+g' /home/$USER/piprse/pihole_vpn/scripts/external.conf
 else
     return 0
 fi
