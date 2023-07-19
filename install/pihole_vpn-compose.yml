@@ -29,6 +29,7 @@ services:
       FTLCONF_REPLY_ADDR4: ${LAN_IP}
       PIHOLE_DNS_: '127.0.0.1#5335'
       DNSMASQ_LISTENING: 'all'
+      CORS_HOSTS: 'pihole.${DOMAIN_NAME}'
     volumes:
       - './pihole/etc-pihole:/etc/pihole'
       - './pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
