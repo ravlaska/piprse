@@ -1,4 +1,4 @@
-version: "3"
+version: "3.4"
 
 networks:
   pi_vpn:
@@ -15,6 +15,7 @@ services:
     build:
       context: .
       dockerfile: scripts/pihole.Dockerfile
+      network: host
     restart: unless-stopped
     ports:
       - "53:53/tcp"
