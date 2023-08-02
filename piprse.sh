@@ -488,6 +488,21 @@ update_system() {
 }
 
 # =============================================================================================================
+# CLEANING LOGS
+# =============================================================================================================
+cleaning_dlogs() {
+    CONTAINER_LOG=$(whiptail --inputbox "Which container's logs you want to clean?" 20 60 3>&1 1>&2 2>&3)
+    sudo sh -c echo "" > $(docker inspect --format="{{.LogPath}}" ${CONTAINER_LOG})
+    #whiptail --msgbox "${CONTAINER_LOG} logs cleaned!" 20 60 1
+    exitstatus=$?
+    if [ $exitstatus = 0 ]; then
+        whiptail --msgbox "${CONTAINER_LOG} logs cleaned!" 20 60 1
+    else
+        whiptail --msgbox "Error while cleaning logs! [check container name]" 20 60 1
+    fi
+}
+
+# =============================================================================================================
 # CHANGE ENV VARIABLES
 # =============================================================================================================
 # Configuring timezone in the device's system
@@ -704,13 +719,14 @@ menu_sec() {
 menu_config() {
   MENU=$(whiptail --title "Configuration" --menu "Configuration menu" $W_HEIGHT $W_WIDTH $W_MENU_HEIGHT --cancel-button Back --ok-button Select \
     "1 System update" "Update & upgrade the system" \
-    "2 Wireguard config" "Configure wireguard clients and show QR codes" \
-    "3 Pihole update" "Update the pihole container" \
-    "4 Power consumption" "Change options to save some power" \
-    "5 Docker system prune" "Remove docker's unused stuff" \
-    "6 Alias" "Set an 'piprse' alias to this tool" \
-    "7 Timezone" "Change the timezone for this device" \
-    "8 Remove" "Stop & delete all containers and clear docker data" \
+    "2 Clean logs" "Clean logs of the specified container" \
+    "3 Wireguard config" "Configure wireguard clients and show QR codes" \
+    "4 Pihole update" "Update the pihole container" \
+    "5 Power consumption" "Change options to save some power" \
+    "6 Docker system prune" "Remove docker's unused stuff" \
+    "7 Alias" "Set an 'piprse' alias to this tool" \
+    "8 Timezone" "Change the timezone for this device" \
+    "9 Remove" "Stop & delete all containers and clear docker data" \
     3>&1 1>&2 2>&3)
   RET=$?
   if [ $RET -eq 1 ]; then
@@ -718,13 +734,14 @@ menu_config() {
   elif [ $RET -eq 0 ]; then
     case "$MENU" in
       1\ *) update_system ;;
-      2\ *) menu_wireguard ;;
-      3\ *) update_pihole ;;
-      4\ *) menu_powersave ;;
-      5\ *) docker_prune ;;
-      6\ *) menu_alias ;;
-      7\ *) config_timezone ;;
-      8\ *) uninstall ;;
+      2\ *) cleaning_dlogs ;;
+      3\ *) menu_wireguard ;;
+      4\ *) update_pihole ;;
+      5\ *) menu_powersave ;;
+      6\ *) docker_prune ;;
+      7\ *) menu_alias ;;
+      8\ *) config_timezone ;;
+      9\ *) uninstall ;;
       *) whiptail --msgbox "Error: bad option selected" 20 60 1 ;;
     esac || whiptail --msgbox "Error while handling $MENU" 20 60 1
   else
